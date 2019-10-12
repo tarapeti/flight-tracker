@@ -4,9 +4,10 @@ import com.project.fligthtracker.model.Planes;
 import com.project.fligthtracker.repositroy.PlaneRepository;
 import com.project.fligthtracker.service.PlaneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class SimplePlaneService implements PlaneService {
     @Autowired
     private PlaneRepository planeRepository;
