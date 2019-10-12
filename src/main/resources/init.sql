@@ -5,10 +5,10 @@ CREATE TABLE planes(
                        companyName text not null,
                        departurePlace text not null,
                        landingPlace text not null,
-                       departureTimeInMilis BIGINT not null ,
-                       landingTimeInMilis BIGINT not null,
-                       lateByMinsInMilis BIGINT
+                       departureTimeInMillis BIGINT not null ,
+                       landingTimeInMillis BIGINT not null,
+                       lateByMinsInMillis BIGINT
 );
 
-INSERT INTO planes(companyName, departurePlace, landingPlace, departureTimeInMilis, landingTimeInMilis, lateByMinsInMilis)
+INSERT INTO planes(companyName, departurePlace, landingPlace, departureTimeInMillis, landingTimeInMillis, lateByMinsInMillis)
 VALUES ('QUATAR', 'Miskolc', 'Budapest', 0, 1, 0);
