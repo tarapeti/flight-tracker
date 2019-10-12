@@ -1,4 +1,4 @@
 package com.project.fligthtracker.service;
 
-public class PlaneService {
+public interface PlaneService {
 }
