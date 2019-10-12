@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flight tracker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<table border="1">
+    <thead>
+    <tr>
+        <th> Company name  </th>
+        <th> Departure place </th>
+        <th> Landing place </th>
+        <th> Departure time </th>
+        <th> Landing time </th>
+        <th> Late by mins </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="plane : ${allPlanes}">
+        <td th:text="${plane.companyName}"></td>
+        <td th:text="${plane.departurePlace}"></td>
+        <td th:text="${plane.landingPlace}"></td>
+        <td th:text="${plane.departureTimeInMillis}"></td>
+        <td th:text="${plane.landingTimeInMillis}"></td>
+        <td th:text="${plane.lateByMinsInMillis}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+
+</html>
