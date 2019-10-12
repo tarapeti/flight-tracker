@@ -24,13 +24,13 @@ public class Planes {
 
     private String landingPlace;
 
-    private int departureTimeInMillis;
+    private long departureTimeInMillis;
 
-    private int landingTimeInMillis;
+    private long landingTimeInMillis;
 
     private int lateByMinsInMillis;
 
-    public Planes(String companyName, String departurePlace, String landingPlace, int departureTimeInMillis, int landingTimeInMillis, int lateByMinsInMillis) {
+    public Planes(String companyName, String departurePlace, String landingPlace, long departureTimeInMillis, long landingTimeInMillis, int lateByMinsInMillis) {
         this.companyName = companyName;
         this.departurePlace = departurePlace;
         this.landingPlace = landingPlace;
