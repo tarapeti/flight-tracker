@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -35,7 +35,9 @@ public class FligthtrackerApplicationTests {
 		assertEquals(plane.getCompanyName(), foundPlane.getCompanyName());
 	}
 
-	@Test public void whenSavedMultiple_thenFindsThemAll(){
+	@Test
+	public void whenSavedMultiple_thenFindsThemAll(){
+		//given
 		Planes plane1 = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
 		Planes plane2 = new Planes("UNITED", "Pécs", "Szeged", 0, 1 ,0);
 
@@ -43,10 +45,26 @@ public class FligthtrackerApplicationTests {
 		planes.add(plane1);
 		planes.add(plane2);
 
+		//when
 		List<Planes> foundPlanes = planeRepository.findAll();
 
+		//then
 		assertEquals(foundPlanes.get(0).getCompanyName(), plane1.getCompanyName());
 		assertEquals(foundPlanes.get(1).getCompanyName(), plane2.getCompanyName());
+	}
+
+	@Test
+	public void whenDeleted_doesntFind(){
+		//gien
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
+		planeRepository.save(plane);
+
+		//when
+		planeRepository.delete(plane);
+
+		//then
+		assertNull(planeRepository.findByCompanyName(plane.getCompanyName()));
+
 	}
 
 

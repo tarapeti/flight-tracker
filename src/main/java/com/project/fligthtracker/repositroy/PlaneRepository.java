@@ -18,4 +18,7 @@ public interface PlaneRepository extends JpaRepository<Planes, Integer> {
 
     @Override
     List<Planes> findAll();
+
+    @Override
+    void delete(Planes entity);
 }
