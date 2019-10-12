@@ -1,14 +1,11 @@
-DROP TABLE IF EXISTS plane CASCADE;
+DROP TABLE IF EXISTS planes CASCADE;
 
 CREATE TABLE planes(
                        id SERIAL PRIMARY KEY,
-                       companyName text not null,
-                       departurePlace text not null,
-                       landingPlace text not null,
-                       departureTimeInMillis BIGINT not null ,
-                       landingTimeInMillis BIGINT not null,
-                       lateByMinsInMillis BIGINT
+                       company_name text not null,
+                       departure_place text not null,
+                       landing_place text not null,
+                       departure_time_in_millis BIGINT not null ,
+                       landing_time_in_millis BIGINT not null,
+                       late_by_mins_in_millis BIGINT
 );
-
-INSERT INTO planes(companyName, departurePlace, landingPlace, departureTimeInMillis, landingTimeInMillis, lateByMinsInMillis)
-VALUES ('QUATAR', 'Miskolc', 'Budapest', 0, 1, 0);
