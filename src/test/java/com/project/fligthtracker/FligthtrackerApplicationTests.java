@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 
@@ -30,6 +33,20 @@ public class FligthtrackerApplicationTests {
 
 		//then
 		assertEquals(plane.getCompanyName(), foundPlane.getCompanyName());
+	}
+
+	@Test public void whenSavedMultiple_thenFindsThemAll(){
+		Planes plane1 = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
+		Planes plane2 = new Planes("UNITED", "Pécs", "Szeged", 0, 1 ,0);
+
+		List<Planes> planes = new ArrayList<>();
+		planes.add(plane1);
+		planes.add(plane2);
+
+		List<Planes> foundPlanes = planeRepository.findAll();
+
+		assertEquals(foundPlanes.get(0).getCompanyName(), plane1.getCompanyName());
+		assertEquals(foundPlanes.get(1).getCompanyName(), plane2.getCompanyName());
 	}
 
 
