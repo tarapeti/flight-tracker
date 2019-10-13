@@ -8,6 +8,7 @@
 <table border="1">
     <thead>
     <tr>
+        <th> ID </th>
         <th> Company name  </th>
         <th> Departure place </th>
         <th> Landing place </th>
@@ -18,6 +19,7 @@
     </thead>
     <tbody>
     <tr th:each="plane : ${allPlanes}">
+        <td th:text="${plane.id}"></td>
         <td th:text="${plane.companyName}"></td>
         <td th:text="${plane.departurePlace}"></td>
         <td th:text="${plane.landingPlace}"></td>
@@ -35,6 +37,11 @@
     LANDING TIME<input name="landingTime" type="datetime-local"/><br>
     LATE BY MINS<input name="lateByMins" type="number"/><br>
     <input type="submit" name="submit" value="value"/>
+</form>
+
+<form method="POST" action="remove">
+    DELETE BY PLANE ID:<input name="planeId" type="number"/><br>
+    <input type="submit" name="submit" />
 </form>
 </body>
 
