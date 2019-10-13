@@ -1,13 +1,13 @@
 package com.project.fligthtracker.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.fligthtracker.model.Planes;
 import com.project.fligthtracker.service.PlaneService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.ejb.EJB;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -15,12 +15,14 @@ import java.time.format.DateTimeFormatter;
 @Controller
 public class FlightController {
 
+    //setting date format
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-
-    @Autowired
+    //injecting planceservice
+    @EJB
     private PlaneService planeService;
 
+    //extending html model with all the planes
     @RequestMapping(value = "/getAll")
     String getAllFlights(Model model
     ){
@@ -28,36 +30,47 @@ public class FlightController {
         return "planes";
     }
 
+    //getting necessary data to insert a new plane into db
     @RequestMapping(path = "/save", method = RequestMethod.POST)
     @ResponseBody
-    void addNewPlane(@RequestParam( required = false) String companyName,
+    RedirectView addNewPlane(@RequestParam( required = false) String companyName,
                      @RequestParam( required = false) String departurePlace,
                      @RequestParam( required = false) String landingPlace,
                      @RequestParam( required = false, name = "departureTime") String departureTimeString,
                      @RequestParam( required = false, name = "landingTime") String landingTimeString,
                      @RequestParam( required = false, name = "lateByMins") Integer lateByMins){
 
-        LocalDateTime departureTimeDate = LocalDateTime.parse(departureTimeString, FORMATTER);
-        LocalDateTime landingTimeDate = LocalDateTime.parse(landingTimeString, FORMATTER);
-        long departureTimeInMilis = departureTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long landingTimeInMilis = landingTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        //converting data from html form into object to later save it in acceptable form in db
+        long departureTimeInMillis = LocalDateTime.parse(departureTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long landingTimeInMillis = LocalDateTime.parse(landingTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        Planes newPlane = new Planes(companyName,departurePlace, landingPlace, departureTimeInMilis, landingTimeInMilis, lateByMins);
+        Planes newPlane = new Planes(companyName,departurePlace, landingPlace, departureTimeInMillis, landingTimeInMillis, lateByMins);
 
         planeService.savePlane(newPlane);
+
+        //simple redirect to visually inform user about the insertion
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/getAll");
+        return redirectView;
+
     }
 
     //couldn't seem to work with deletemapping or .DELETE because html forms doesn't seem to like them
     @RequestMapping(path = "/remove", method = RequestMethod.POST)
     public @ResponseBody
-    void removePlaneById(@RequestParam(name = "planeId", required = false) Integer id) {
+    RedirectView removePlaneById(@RequestParam(name = "planeId", required = false) Integer id) {
+        //deleting plane with {id}
         planeService.deletePlane(planeService.findById(id));
+        //redirect for visual info
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/getAll");
+        return redirectView;
     }
 
     //html doesn't seem to like update as well
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     @ResponseBody
-    void updatePlane(@RequestParam( required = false) String id,
+    RedirectView updatePlane(@RequestParam( required = false) String id,
                      @RequestParam( required = false) String companyName,
                      @RequestParam( required = false) String departurePlace,
                      @RequestParam( required = false) String landingPlace,
@@ -65,30 +78,26 @@ public class FlightController {
                      @RequestParam( required = false, name = "landingTime") String landingTimeString,
                      @RequestParam( required = false, name = "lateByMins") Integer lateByMins) {
 
-        LocalDateTime departureTimeDate = LocalDateTime.parse(departureTimeString, FORMATTER);
-        LocalDateTime landingTimeDate = LocalDateTime.parse(landingTimeString, FORMATTER);
-        long departureTimeInMilis = departureTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long landingTimeInMilis = landingTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        //retrieving and converting data from html form
+        long departureTimeInMillis = LocalDateTime.parse(departureTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long landingTimeInMillis = LocalDateTime.parse(landingTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
+        //getting the plane that will be updated
         Planes plane = planeService.findById(Integer.valueOf(id));
+
+        //changing parameters
         plane.setCompanyName(companyName);
         plane.setDeparturePlace(departurePlace);
         plane.setLandingPlace(landingPlace);
-        plane.setDepartureTimeInMillis(departureTimeInMilis);
-        plane.setLandingTimeInMillis(landingTimeInMilis);
+        plane.setDepartureTimeInMillis(departureTimeInMillis);
+        plane.setLandingTimeInMillis(landingTimeInMillis);
         plane.setLateByMins(lateByMins);
 
         planeService.updatePlane(plane);
-    }
 
-    //object to string in json format converter
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        //redirect for visual info
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/getAll");
+        return redirectView;
     }
 }
