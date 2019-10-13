@@ -1,7 +1,9 @@
 package com.project.fligthtracker.controller;
 
 import com.project.fligthtracker.model.Planes;
+import com.project.fligthtracker.repositroy.PlaneRepository;
 import com.project.fligthtracker.service.PlaneService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +13,14 @@ import javax.ejb.EJB;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class FlightController {
+
+    @Autowired
+    PlaneRepository planeRepository;
 
     //setting date format
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -24,9 +31,9 @@ public class FlightController {
 
     //extending html model with all the planes
     @RequestMapping(value = "/getAll")
-    String getAllFlights(Model model
-    ){
-        model.addAttribute("allPlanes", planeService.findAllPlanes());
+    String getAllFlights(Model model){
+        List<Planes> allPlanes = planeService.findAllPlanes();
+        model.addAttribute("allPlanes", planeService.parsePlaneList(allPlanes));
         return "planes";
     }
 
@@ -99,5 +106,23 @@ public class FlightController {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("/getAll");
         return redirectView;
+    }
+    @RequestMapping(path = "filter", method = RequestMethod.POST)
+    @ResponseBody
+    String getAllFilteredFlights(Model model,
+                                 @RequestParam( required = false, name = "departureTime") String departureTimeFrom){
+        long departureTimeFromInMillis =  LocalDateTime.parse(departureTimeFrom, FORMATTER)
+                .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        List<Planes> allPlanes = planeService.findAllPlanes();
+        List<Planes> filteredPlanes = new ArrayList<>();
+        for (Planes p: allPlanes) {
+            if (p.getDepartureTimeInMillis() > departureTimeFromInMillis){
+                filteredPlanes.add(p);
+            }
+
+        }
+        model.addAttribute("allPlanes", planeService.parsePlaneList(filteredPlanes));
+        return "planes";
     }
 }

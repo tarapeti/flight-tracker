@@ -188,4 +188,16 @@ public class FligthtrackerApplicationTests {
 		//then
 		assertFalse(plane.getCompanyName().equals(planeAfterUpdate.getCompanyName()));
 	}
+	@Test
+    public void doesFilteringWorks() throws Exception {
+	    //given
+        Planes plane = planeService.findById(1);
+
+        //when
+        MockHttpServletResponse request = mockMvc.perform(post("/filter")
+                .param("departureTime", "0002-12-12T12:12")).andReturn().getResponse();
+
+        //then
+        assertEquals(request.getStatus(), HttpStatus.OK.value());
+    }
 }
