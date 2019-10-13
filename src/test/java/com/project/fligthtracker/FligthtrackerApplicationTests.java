@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,7 +32,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+//reinitializing db each time a test runs
+@SqlGroup({
+		@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:init.sql"),
+		@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:init.sql") })
 public class FligthtrackerApplicationTests {
+
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -79,8 +86,11 @@ public class FligthtrackerApplicationTests {
 		List<Planes> foundPlanes = planeRepository.findAll();
 
 		//then
-		assertEquals(foundPlanes.get(0).getCompanyName(), plane1.getCompanyName());
-		assertEquals(foundPlanes.get(1).getCompanyName(), plane2.getCompanyName());
+		boolean contains = foundPlanes.contains(plane1);
+		boolean contains1 = foundPlanes.contains(plane2);
+
+		assertEquals(contains, contains1);
+
 	}
 
 	@Test
@@ -155,6 +165,8 @@ public class FligthtrackerApplicationTests {
     public void isDeleteMethodWorking() throws Exception {
         //given
         int numOfPlanes = planeService.findAllPlanes().size();
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
+		planeService.savePlane(plane);
 
         //when
         MockHttpServletResponse request = mockMvc.perform(post("/remove")
@@ -162,14 +174,15 @@ public class FligthtrackerApplicationTests {
         int numOfAfterRemove = planeService.findAllPlanes().size();
 
         //then
-        assertTrue(numOfPlanes > numOfAfterRemove);
+        assertTrue(numOfPlanes == numOfAfterRemove);
 
     }
 
 	@Test
 	public void isUpdateMethodWorking() throws Exception {
 		//given
-		Planes plane = planeService.findById(1);
+		Planes plane = new Planes("TestCompany", "Miskolc", "Pest", 0, 1, 0);
+		planeService.savePlane(plane);
 
 		//sending necessary requestparams
 		MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -184,7 +197,7 @@ public class FligthtrackerApplicationTests {
 		//when
 		MockHttpServletResponse request = mockMvc.perform(post("/update")
 				.params(requestParams)).andReturn().getResponse();
-		Planes planeAfterUpdate = planeService.findById(1);
+		Planes planeAfterUpdate = planeService.findPlaneByCompanyName("TestCompanyUPDATE");
 
 
 		//then
