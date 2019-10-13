@@ -1,5 +1,6 @@
 package com.project.fligthtracker.service;
 
+import com.project.fligthtracker.dto.PlaneInfoToTableDto;
 import com.project.fligthtracker.model.Planes;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface PlaneService {
     void updatePlane(Planes planes);
 
     Planes findById(int id);
+
+    List<PlaneInfoToTableDto> parsePlaneList(List<Planes> planes);
 }
