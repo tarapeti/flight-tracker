@@ -7,8 +7,8 @@ CREATE TABLE planes(
                        landing_place text not null,
                        departure_time_in_millis BIGINT not null ,
                        landing_time_in_millis BIGINT not null,
-                       late_by_mins_in_millis BIGINT
+                       late_by_mins int
 );
 
-INSERT into planes(COMPANY_NAME, DEPARTURE_PLACE, LANDING_PLACE, DEPARTURE_TIME_IN_MILLIS, LANDING_TIME_IN_MILLIS, LATE_BY_MINS_IN_MILLIS)
+INSERT into planes(COMPANY_NAME, DEPARTURE_PLACE, LANDING_PLACE, DEPARTURE_TIME_IN_MILLIS, LANDING_TIME_IN_MILLIS, LATE_BY_MINS)
 VALUES ('QUATAR', 'From here', 'To there', 0, 1, 0);
