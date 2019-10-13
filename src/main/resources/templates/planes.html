@@ -14,7 +14,7 @@
         <th> Landing place </th>
         <th> Departure time </th>
         <th> Landing time </th>
-        <th> Late by mins </th>
+        <th> Delay </th>
     </tr>
     </thead>
     <tbody>
@@ -25,25 +25,30 @@
         <td th:text="${plane.landingPlace}"></td>
         <td th:text="${plane.departureTimeInMillis}"></td>
         <td th:text="${plane.landingTimeInMillis}"></td>
-        <td th:text="${plane.lateByMins}"></td>
+        <td th:text="${plane.delay}"></td>
     </tr>
     </tbody>
 </table>
+<br>
+<h1>ADD NEW PLANE</h1>
 <form method="POST" action="save">
     COMPANY NAME<input name="companyName" type="text"/><br>
     DEPARTURE PLACE<input name="departurePlace" type="text"/><br>
     LANDING PLACE<input name="landingPlace" type="text"/><br>
     DEPARTURE TIME<input name="departureTime" type="datetime-local"/><br>
     LANDING TIME<input name="landingTime" type="datetime-local"/><br>
-    LATE BY MINS<input name="lateByMins" type="number"/><br>
-    <input type="submit" name="submit" value="value"/>
+    LATE BY MINS<input name="delay" type="number"/><br>
+    <input type="submit" name="submit" value="ADD"/>
 </form>
-
+<br>
+<h1>DELETE PLANE</h1>
 <form method="POST" action="remove">
     DELETE BY PLANE ID:<input name="planeId" type="number"/><br>
-    <input type="submit" name="submit" />
+    <input type="submit" name="DELETE" />
 </form>
 
+<br>
+<h1>UPDATE PLANE</h1>
 <form method="POST" action="update">
     ID<input required name="id" type="number"/><br>
     COMPANY NAME<input required min="1" th:max="${#lists.size(allPlanes)}" name="companyName" type="text"/><br>
@@ -51,16 +56,20 @@
     LANDING PLACE<input required name="landingPlace" type="text"/><br>
     DEPARTURE TIME<input required name="departureTime" type="datetime-local"/><br>
     LANDING TIME<input required name="landingTime" type="datetime-local"/><br>
-    LATE BY MINS<input required name="lateByMins" type="number"/><br>
-    <input type="submit" name="submit" value="value"/>
+    LATE BY MINS<input required name="delay" type="number"/><br>
+    <input type="submit" name="submit" value="UPDATE"/>
 </form>
 
-
+<br>
+<h1>FILTER</h1>
 <form method="POST" action="filter">
     DEPARTURE TIME<input required name="departureTime" type="datetime-local"/><br>
-    <input type="submit" name="submit" value="value"/>
+    <input type="submit" name="submit" value="FILTER"/>
 </form>
+
+<h2>MAX DELAYED PLANE</h2>
+<h3 th:text="${maxDelay.companyName}"></h3>
+<h2>AVG DELAY</h2>
+<h3 th:text="${avgDelay}"></h3>
 </body>
-
-
 </html>
