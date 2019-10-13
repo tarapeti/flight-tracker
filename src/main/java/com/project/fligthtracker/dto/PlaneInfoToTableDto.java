@@ -23,15 +23,15 @@ public class PlaneInfoToTableDto {
 
         private String landingTimeInMillis;
 
-        private int lateByMins;
+        private int delay;
 
-    public PlaneInfoToTableDto(int id, String companyName, String departurePlace, String landingPlace, String departureTimeInMillis, String landingTimeInMillis, int lateByMins) {
+    public PlaneInfoToTableDto(int id, String companyName, String departurePlace, String landingPlace, String departureTimeInMillis, String landingTimeInMillis, int delay) {
         this.id = id;
         this.companyName = companyName;
         this.departurePlace = departurePlace;
         this.landingPlace = landingPlace;
         this.departureTimeInMillis = departureTimeInMillis;
         this.landingTimeInMillis = landingTimeInMillis;
-        this.lateByMins = lateByMins;
+        this.delay = delay;
     }
 }
