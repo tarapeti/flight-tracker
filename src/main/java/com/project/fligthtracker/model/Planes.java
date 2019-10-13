@@ -1,6 +1,5 @@
 package com.project.fligthtracker.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Planes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +26,14 @@ public class Planes {
 
     private long landingTimeInMillis;
 
-    private int lateByMinsInMillis;
+    private int lateByMins;
 
-    public Planes(String companyName, String departurePlace, String landingPlace, long departureTimeInMillis, long landingTimeInMillis, int lateByMinsInMillis) {
+    public Planes(String companyName, String departurePlace, String landingPlace, long departureTimeInMillis, long landingTimeInMillis, int lateByMins) {
         this.companyName = companyName;
         this.departurePlace = departurePlace;
         this.landingPlace = landingPlace;
         this.departureTimeInMillis = departureTimeInMillis;
         this.landingTimeInMillis = landingTimeInMillis;
-        this.lateByMinsInMillis = lateByMinsInMillis;
+        this.lateByMins = lateByMins;
     }
 }
