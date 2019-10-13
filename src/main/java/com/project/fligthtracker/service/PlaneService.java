@@ -4,6 +4,7 @@ import com.project.fligthtracker.dto.PlaneInfoToTableDto;
 import com.project.fligthtracker.model.Planes;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 public interface PlaneService {
 
@@ -20,4 +21,8 @@ public interface PlaneService {
     Planes findById(int id);
 
     List<PlaneInfoToTableDto> parsePlaneList(List<Planes> planes);
+
+    Planes getMostDelayedPlane(List<Planes> allPlanes);
+
+    OptionalDouble getAvgDelay(List<Planes> allPlanes);
 }
