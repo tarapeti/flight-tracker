@@ -21,4 +21,6 @@ public interface PlaneRepository extends JpaRepository<Planes, Integer> {
 
     @Override
     void delete(Planes entity);
+
+    Planes findById(int id);
 }

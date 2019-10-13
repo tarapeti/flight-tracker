@@ -15,4 +15,6 @@ public interface PlaneService {
     Planes findPlaneByCompanyName(String companyName);
 
     void updatePlane(Planes planes);
+
+    Planes findById(int id);
 }

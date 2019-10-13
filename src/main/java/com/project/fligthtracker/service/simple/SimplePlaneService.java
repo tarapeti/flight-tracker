@@ -34,7 +34,12 @@ public class SimplePlaneService implements PlaneService {
 
     @Override
     public void updatePlane(Planes plane) {
-        //jpa repositroy's save works as update if the databas already contains the objects id in it
+        //jpa repositroy's save works as update if the database already contains the object's id in it
         planeRepository.save(plane);
+    }
+
+    @Override
+    public Planes findById(int id) {
+        return planeRepository.findById(id);
     }
 }
