@@ -139,7 +139,7 @@ public class FligthtrackerApplicationTests {
 		requestParams.add("landingPlace", "TestPlace");
 		requestParams.add("departureTime", "1111-11-11T11:11");
 		requestParams.add("landingTime", "0002-12-12T12:12");
-		requestParams.add("lateByMins", "3");
+		requestParams.add("delay", "3");
 
 		//when
 		MockHttpServletResponse request = mockMvc.perform(post("/save")
@@ -177,7 +177,7 @@ public class FligthtrackerApplicationTests {
 		requestParams.add("landingPlace", "TestPlace");
 		requestParams.add("departureTime", "1111-11-11T11:11");
 		requestParams.add("landingTime", "0002-12-12T12:12");
-		requestParams.add("lateByMins", "3");
+		requestParams.add("delay", "3");
 
 		//when
 		MockHttpServletResponse request = mockMvc.perform(post("/update")
