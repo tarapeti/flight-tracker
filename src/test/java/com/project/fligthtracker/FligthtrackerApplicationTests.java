@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -170,6 +171,7 @@ public class FligthtrackerApplicationTests {
 		//given
 		Planes plane = planeService.findById(1);
 
+		//sending necessary requestparams
 		MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
 		requestParams.add("id", "1");
 		requestParams.add("companyName", "TestCompanyUPDATE");
@@ -200,4 +202,41 @@ public class FligthtrackerApplicationTests {
         //then
         assertEquals(request.getStatus(), HttpStatus.OK.value());
     }
+
+    @Test
+    public void isBusinessLogicWorking_maxDelay(){
+	    //given
+        int delay = 100;
+        Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, delay);
+        planeService.savePlane(plane);
+        List<Planes> allPlanes = planeService.findAllPlanes();
+
+        //when
+        Planes mostDelayedPlane = planeService.getMostDelayedPlane(allPlanes);
+
+        //then
+        assertEquals(mostDelayedPlane.getDelay(), delay);
+    }
+
+    @Test
+    public void isBusinessLogicWorking_avgDelay(){
+        //given
+        int delay1 = 100;
+        int delay2 = 200;
+        int avgDelay = 150;
+        Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, delay1);
+        Planes plane2 = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, delay2);
+        List<Planes> allPlanes = new ArrayList<>();
+        allPlanes.add(plane);
+        allPlanes.add(plane2);
+
+        //when
+        OptionalDouble calculatedDelay = planeService.getAvgDelay(allPlanes);
+
+
+        //then
+        assertTrue(avgDelay == calculatedDelay.getAsDouble());
+    }
+
+
 }
