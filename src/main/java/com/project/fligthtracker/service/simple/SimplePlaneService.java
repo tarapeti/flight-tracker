@@ -86,4 +86,16 @@ public class SimplePlaneService implements PlaneService {
                 .mapToDouble(Planes::getDelay)
                 .average();
     }
+
+    @Override
+    public List<Planes> getFilteredPlanes(List<Planes> allPlanes, long departureTimeFromInMillis) {
+        List<Planes> filteredPlanes = new ArrayList<>();
+        for (Planes p: allPlanes) {
+            if (p.getDepartureTimeInMillis() > departureTimeFromInMillis){
+                filteredPlanes.add(p);
+            }
+
+        }
+        return filteredPlanes;
+    }
 }

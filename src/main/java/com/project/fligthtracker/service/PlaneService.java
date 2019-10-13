@@ -25,4 +25,6 @@ public interface PlaneService {
     Planes getMostDelayedPlane(List<Planes> allPlanes);
 
     OptionalDouble getAvgDelay(List<Planes> allPlanes);
+
+    List<Planes> getFilteredPlanes(List<Planes> allPlanes, long departureTimeFromInMillis);
 }

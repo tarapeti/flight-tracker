@@ -122,13 +122,7 @@ public class FlightController {
                 .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         List<Planes> allPlanes = planeService.findAllPlanes();
-        List<Planes> filteredPlanes = new ArrayList<>();
-        for (Planes p: allPlanes) {
-            if (p.getDepartureTimeInMillis() > departureTimeFromInMillis){
-                filteredPlanes.add(p);
-            }
-
-        }
+        List<Planes> filteredPlanes = planeService.getFilteredPlanes(allPlanes, departureTimeFromInMillis);
         model.addAttribute("allPlanes", planeService.parsePlaneList(filteredPlanes));
         return "planes";
     }
