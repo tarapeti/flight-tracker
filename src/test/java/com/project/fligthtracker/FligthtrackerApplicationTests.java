@@ -164,4 +164,28 @@ public class FligthtrackerApplicationTests {
         assertTrue(numOfPlanes > numOfAfterRemove);
 
     }
+
+	@Test
+	public void isUpdateMethodWorking() throws Exception {
+		//given
+		Planes plane = planeService.findById(1);
+
+		MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+		requestParams.add("id", "1");
+		requestParams.add("companyName", "TestCompanyUPDATE");
+		requestParams.add("departurePlace", "TestPlace");
+		requestParams.add("landingPlace", "TestPlace");
+		requestParams.add("departureTime", "1111-11-11T11:11");
+		requestParams.add("landingTime", "0002-12-12T12:12");
+		requestParams.add("lateByMins", "3");
+
+		//when
+		MockHttpServletResponse request = mockMvc.perform(post("/update")
+				.params(requestParams)).andReturn().getResponse();
+		Planes planeAfterUpdate = planeService.findById(1);
+
+
+		//then
+		assertNotEquals(plane.getCompanyName(), planeAfterUpdate.getCompanyName());
+	}
 }

@@ -15,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 @Controller
 public class FlightController {
 
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+
     @Autowired
     private PlaneService planeService;
 
@@ -34,10 +37,8 @@ public class FlightController {
                      @RequestParam( required = false, name = "landingTime") String landingTimeString,
                      @RequestParam( required = false, name = "lateByMins") Integer lateByMins){
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
-        LocalDateTime departureTimeDate = LocalDateTime.parse(departureTimeString, formatter);
-        LocalDateTime landingTimeDate = LocalDateTime.parse(landingTimeString, formatter);
+        LocalDateTime departureTimeDate = LocalDateTime.parse(departureTimeString, FORMATTER);
+        LocalDateTime landingTimeDate = LocalDateTime.parse(landingTimeString, FORMATTER);
         long departureTimeInMilis = departureTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long landingTimeInMilis = landingTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
@@ -46,10 +47,38 @@ public class FlightController {
         planeService.savePlane(newPlane);
     }
 
+    //couldn't seem to work with deletemapping or .DELETE because html forms doesn't seem to like them
     @RequestMapping(path = "/remove", method = RequestMethod.POST)
     public @ResponseBody
     void removePlaneById(@RequestParam(name = "planeId", required = false) Integer id) {
         planeService.deletePlane(planeService.findById(id));
+    }
+
+    //html doesn't seem to like update as well
+    @RequestMapping(path = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    void updatePlane(@RequestParam( required = false) String id,
+                     @RequestParam( required = false) String companyName,
+                     @RequestParam( required = false) String departurePlace,
+                     @RequestParam( required = false) String landingPlace,
+                     @RequestParam( required = false, name = "departureTime") String departureTimeString,
+                     @RequestParam( required = false, name = "landingTime") String landingTimeString,
+                     @RequestParam( required = false, name = "lateByMins") Integer lateByMins) {
+
+        LocalDateTime departureTimeDate = LocalDateTime.parse(departureTimeString, FORMATTER);
+        LocalDateTime landingTimeDate = LocalDateTime.parse(landingTimeString, FORMATTER);
+        long departureTimeInMilis = departureTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long landingTimeInMilis = landingTimeDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        Planes plane = planeService.findById(Integer.valueOf(id));
+        plane.setCompanyName(companyName);
+        plane.setDeparturePlace(departurePlace);
+        plane.setLandingPlace(landingPlace);
+        plane.setDepartureTimeInMillis(departureTimeInMilis);
+        plane.setLandingTimeInMillis(landingTimeInMilis);
+        plane.setLateByMins(lateByMins);
+
+        planeService.updatePlane(plane);
     }
 
     //object to string in json format converter
