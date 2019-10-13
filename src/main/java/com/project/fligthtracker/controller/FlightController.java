@@ -13,8 +13,7 @@ import javax.ejb.EJB;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class FlightController {
@@ -33,6 +32,14 @@ public class FlightController {
     @RequestMapping(value = "/getAll")
     String getAllFlights(Model model){
         List<Planes> allPlanes = planeService.findAllPlanes();
+
+        //finding the plane which was delayed the most
+        Planes maxDelay = planeService.getMostDelayedPlane(allPlanes);
+        //getting avg delay
+        OptionalDouble average = planeService.getAvgDelay(allPlanes);
+
+        model.addAttribute("maxDelay", maxDelay);
+        model.addAttribute("avgDelay", average.getAsDouble());
         model.addAttribute("allPlanes", planeService.parsePlaneList(allPlanes));
         return "planes";
     }
@@ -45,13 +52,13 @@ public class FlightController {
                      @RequestParam( required = false) String landingPlace,
                      @RequestParam( required = false, name = "departureTime") String departureTimeString,
                      @RequestParam( required = false, name = "landingTime") String landingTimeString,
-                     @RequestParam( required = false, name = "lateByMins") Integer lateByMins){
+                     @RequestParam( required = false, name = "delay") Integer delay){
 
         //converting data from html form into object to later save it in acceptable form in db
         long departureTimeInMillis = LocalDateTime.parse(departureTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long landingTimeInMillis = LocalDateTime.parse(landingTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        Planes newPlane = new Planes(companyName,departurePlace, landingPlace, departureTimeInMillis, landingTimeInMillis, lateByMins);
+        Planes newPlane = new Planes(companyName,departurePlace, landingPlace, departureTimeInMillis, landingTimeInMillis, delay);
 
         planeService.savePlane(newPlane);
 
@@ -83,7 +90,7 @@ public class FlightController {
                      @RequestParam( required = false) String landingPlace,
                      @RequestParam( required = false, name = "departureTime") String departureTimeString,
                      @RequestParam( required = false, name = "landingTime") String landingTimeString,
-                     @RequestParam( required = false, name = "lateByMins") Integer lateByMins) {
+                     @RequestParam( required = false, name = "delay") Integer delay) {
 
         //retrieving and converting data from html form
         long departureTimeInMillis = LocalDateTime.parse(departureTimeString, FORMATTER).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -98,7 +105,7 @@ public class FlightController {
         plane.setLandingPlace(landingPlace);
         plane.setDepartureTimeInMillis(departureTimeInMillis);
         plane.setLandingTimeInMillis(landingTimeInMillis);
-        plane.setLateByMins(lateByMins);
+        plane.setDelay(delay);
 
         planeService.updatePlane(plane);
 
