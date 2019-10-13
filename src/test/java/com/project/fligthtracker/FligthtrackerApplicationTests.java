@@ -144,9 +144,24 @@ public class FligthtrackerApplicationTests {
 		//when
 		MockHttpServletResponse request = mockMvc.perform(post("/save")
 				.params(requestParams)).andReturn().getResponse();
-		int numOfafterAddingNewPlane = planeService.findAllPlanes().size();
+		int numOfAfterAddingNewPlane = planeService.findAllPlanes().size();
 
 		//then
-		assertTrue(numOfPlanes < numOfafterAddingNewPlane);
+		assertTrue(numOfPlanes < numOfAfterAddingNewPlane);
 	}
+
+	@Test
+    public void isDeleteMethodWorking() throws Exception {
+        //given
+        int numOfPlanes = planeService.findAllPlanes().size();
+
+        //when
+        MockHttpServletResponse request = mockMvc.perform(post("/remove")
+                .param("planeId", "1")).andReturn().getResponse();
+        int numOfAfterRemove = planeService.findAllPlanes().size();
+
+        //then
+        assertTrue(numOfPlanes > numOfAfterRemove);
+
+    }
 }

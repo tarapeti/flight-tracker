@@ -46,6 +46,12 @@ public class FlightController {
         planeService.savePlane(newPlane);
     }
 
+    @RequestMapping(path = "/remove", method = RequestMethod.POST)
+    public @ResponseBody
+    void removePlaneById(@RequestParam(name = "planeId", required = false) Integer id) {
+        planeService.deletePlane(planeService.findById(id));
+    }
+
     //object to string in json format converter
     public static String asJsonString(final Object obj) {
         try {
