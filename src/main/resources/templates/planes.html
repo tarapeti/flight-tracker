@@ -43,6 +43,17 @@
     DELETE BY PLANE ID:<input name="planeId" type="number"/><br>
     <input type="submit" name="submit" />
 </form>
+
+<form method="POST" action="update">
+    ID<input required name="id" type="number"/><br>
+    COMPANY NAME<input required min="1" th:max="${#lists.size(allPlanes)}" name="companyName" type="text"/><br>
+    DEPARTURE PLACE<input required name="departurePlace" type="text"/><br>
+    LANDING PLACE<input required name="landingPlace" type="text"/><br>
+    DEPARTURE TIME<input required name="departureTime" type="datetime-local"/><br>
+    LANDING TIME<input required name="landingTime" type="datetime-local"/><br>
+    LATE BY MINS<input required name="lateByMins" type="number"/><br>
+    <input type="submit" name="submit" value="value"/>
+</form>
 </body>
 
 
