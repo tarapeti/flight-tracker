@@ -186,6 +186,6 @@ public class FligthtrackerApplicationTests {
 
 
 		//then
-		assertNotEquals(plane.getCompanyName(), planeAfterUpdate.getCompanyName());
+		assertFalse(plane.getCompanyName().equals(planeAfterUpdate.getCompanyName()));
 	}
 }
