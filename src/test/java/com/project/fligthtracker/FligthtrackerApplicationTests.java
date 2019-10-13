@@ -10,19 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -51,7 +53,7 @@ public class FligthtrackerApplicationTests {
 	@Test
 	public void whenSaved_thenFindsByName() {
 		//given
-		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
 
 		planeRepository.save(plane);
 
@@ -63,10 +65,10 @@ public class FligthtrackerApplicationTests {
 	}
 
 	@Test
-	public void whenSavedMultiple_thenFindsThemAll(){
+	public void whenSavedMultiple_thenFindsThemAll() {
 		//given
-		Planes plane1 = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
-		Planes plane2 = new Planes("UNITED", "Pécs", "Szeged", 0, 1 ,0);
+		Planes plane1 = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
+		Planes plane2 = new Planes("UNITED", "Pécs", "Szeged", 0, 1, 0);
 
 		List<Planes> planes = new ArrayList<>();
 		planes.add(plane1);
@@ -81,9 +83,9 @@ public class FligthtrackerApplicationTests {
 	}
 
 	@Test
-	public void whenDeleted_doesntFind(){
+	public void whenDeleted_doesntFind() {
 		//given
-		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
 		planeRepository.save(plane);
 
 		//when
@@ -94,9 +96,9 @@ public class FligthtrackerApplicationTests {
 	}
 
 	@Test
-	public void whenUpdated_thenChanges(){
+	public void whenUpdated_thenChanges() {
 		//given
-		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
 		planeRepository.save(plane);
 		String newDeparturePlace = "Pécs";
 		plane.setDeparturePlace(newDeparturePlace);
@@ -111,9 +113,9 @@ public class FligthtrackerApplicationTests {
 	}
 
 	@Test
-	public void canRetrieveByIdWhenExists() throws Exception {
-		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1 ,0);
-		planeRepository.save(plane);
+	public void isGetMethodValid() throws Exception {
+		Planes plane = new Planes("QUATAR", "Miskolc", "Pest", 0, 1, 0);
+		planeService.savePlane(plane);
 
 		// when
 		MockHttpServletResponse response = mockMvc.perform(
@@ -124,5 +126,27 @@ public class FligthtrackerApplicationTests {
 		// then
 		assertEquals(response.getStatus(), HttpStatus.OK.value());
 		assertFalse(response.getContentAsString().length() < 1);
+	}
+
+	@Test
+	public void isPostMethodWorking() throws Exception {
+	//given
+		int numOfPlanes = planeService.findAllPlanes().size();
+
+		MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+		requestParams.add("companyName", "TestCompany");
+		requestParams.add("departurePlace", "TestPlace");
+		requestParams.add("landingPlace", "TestPlace");
+		requestParams.add("departureTime", "1111-11-11T11:11");
+		requestParams.add("landingTime", "0002-12-12T12:12");
+		requestParams.add("lateByMins", "3");
+
+		//when
+		MockHttpServletResponse request = mockMvc.perform(post("/save")
+				.params(requestParams)).andReturn().getResponse();
+		int numOfafterAddingNewPlane = planeService.findAllPlanes().size();
+
+		//then
+		assertTrue(numOfPlanes < numOfafterAddingNewPlane);
 	}
 }
