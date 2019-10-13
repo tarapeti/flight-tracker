@@ -116,7 +116,7 @@ public class FlightController {
     }
     @RequestMapping(path = "filter", method = RequestMethod.POST)
     @ResponseBody
-    String getAllFilteredFlights(Model model,
+    RedirectView getAllFilteredFlights(Model model,
                                  @RequestParam( required = false, name = "departureTime") String departureTimeFrom){
         long departureTimeFromInMillis =  LocalDateTime.parse(departureTimeFrom, FORMATTER)
                 .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -124,6 +124,9 @@ public class FlightController {
         List<Planes> allPlanes = planeService.findAllPlanes();
         List<Planes> filteredPlanes = planeService.getFilteredPlanes(allPlanes, departureTimeFromInMillis);
         model.addAttribute("allPlanes", planeService.parsePlaneList(filteredPlanes));
-        return "planes";
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/getAll");
+        return redirectView;
     }
 }
